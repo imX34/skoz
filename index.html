@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>صفحة ابو سكوووز</title>
+<title>ابو سكوز</title>
 <link rel="icon" href="images/img3.png" onerror="this.href='data:,'">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -564,6 +564,17 @@
 
 <script>
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // rotating browser tab title
+  (function(){
+    const titleVariants = ['ابو سكوز', 'بدوووري', 'ابو كايف', 'بدر المطيري'];
+    let titleIdx = 0;
+    document.title = titleVariants[titleIdx];
+    setInterval(()=>{
+      titleIdx = (titleIdx + 1) % titleVariants.length;
+      document.title = titleVariants[titleIdx];
+    }, 2500);
+  })();
 
   // graceful fallback if images not present
   function checkImg(url){
