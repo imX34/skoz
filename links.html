@@ -27,8 +27,31 @@
     flex-direction:column;
     align-items:center;
     padding:56px 20px 40px;
+    position:relative;
   }
   .display{font-family:'Amiri', serif;}
+
+  /* ---------- tilted photo-collage background ---------- */
+  .bg-collage{
+    position:fixed;
+    top:50%; left:50%;
+    width:250vw; height:250vh;
+    transform:translate(-50%,-50%) rotate(40deg);
+    display:grid;
+    grid-template-columns:repeat(auto-fill, 220px);
+    grid-auto-rows:220px;
+    gap:4px;
+    filter:blur(12px) brightness(.4) saturate(1.05);
+    z-index:-3;
+    pointer-events:none;
+  }
+  .bg-collage.noimg{ display:none; }
+  .bg-collage .tile{ background-size:cover; background-position:center; }
+  .bg-overlay{
+    position:fixed; inset:0; z-index:-2;
+    background:rgba(23,19,16,.6);
+    pointer-events:none;
+  }
 
   .avatar{
     width:104px; height:104px; border-radius:50%;
@@ -112,6 +135,9 @@
 </head>
 <body>
 
+<div class="bg-collage" id="bgCollage"></div>
+<div class="bg-overlay"></div>
+
 <div class="avatar" id="avatar"></div>
 <h1 class="display">بدر المطيري</h1>
 <p class="subtitle">ستريمر وصانع محتوى</p>
@@ -177,6 +203,35 @@
     if(ok){ av.style.backgroundImage = "url('images/img3.png')"; }
     else{ av.classList.add('noimg'); }
   });
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+    return a;
+  }
+
+  (async function buildCollage(){
+    const candidates = ['images/img1.png','images/img2.png','images/img3.png','images/img4.png','images/img5.png','images/img6.png','images/img7.png','images/img8.png','images/img9.png','images/img10.png'];
+    const checks = await Promise.all(candidates.map(src=>checkImg(src).then(ok=>ok?src:null)));
+    const available = checks.filter(Boolean);
+    const collage = document.getElementById('bgCollage');
+    if(available.length === 0){ collage.classList.add('noimg'); return; }
+
+    const tileSize = 220;
+    const containerW = window.innerWidth * 2.6;
+    const containerH = window.innerHeight * 2.6;
+    const cols = Math.ceil(containerW / tileSize);
+    const rows = Math.ceil(containerH / tileSize);
+    const total = cols * rows;
+
+    const order = shuffle(available);
+    for(let i=0;i<total;i++){
+      const tile = document.createElement('div');
+      tile.className = 'tile';
+      tile.style.backgroundImage = `url('${order[i % order.length]}')`;
+      collage.appendChild(tile);
+    }
+  })();
 </script>
 
 </body>
