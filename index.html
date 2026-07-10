@@ -525,9 +525,9 @@
   </div>
   <div class="social-grid">
 
-    <a class="social-card" href="https://www.instagram.com/l21i9l/" target="_blank" rel="noopener" data-color="#d6249f" data-bg="images/instabg.png">
+    <a class="social-card" id="instaCard" href="https://www.instagram.com/l21i9l/" target="_blank" rel="noopener" data-color="#d6249f" data-bg="images/instabg.png">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="#e4c98a" stroke="none"/></svg>
-      <span>انستقرام</span>
+      <span id="instaLabel">است قرام</span>
     </a>
 
     <a class="social-card" href="https://www.snapchat.com/@l21i9l?invite_id=-bIFmBMd&locale=ar_US&share_id=2hvG8aubQA-VrzhWmO94rw&sid=9c882c8062c245cca6446858284c1b79&locale=en-AE" target="_blank" rel="noopener" data-color="#FFFC00" data-bg="images/snapchatbg.png">
@@ -809,6 +809,33 @@
     });
   }
   function wait(ms){ return new Promise(r=>setTimeout(r, ms)); }
+
+  /* ---------- instagram label typo gag ---------- */
+  (function(){
+    const card = document.getElementById('instaCard');
+    const label = document.getElementById('instaLabel');
+    if(!card || !label) return;
+
+    const FIXED_KEY = 'igLabelFixed';
+    let playing = false;
+
+    if(localStorage.getItem(FIXED_KEY) === '1'){
+      label.textContent = 'انستقرام';
+      return;
+    }
+
+    card.addEventListener('mouseenter', async function fix(){
+      if(playing || localStorage.getItem(FIXED_KEY) === '1') return;
+      playing = true;
+      await eraseText(label, 45);
+      await typeText(label, 'معليش قصدي انستقرام', 45);
+      await wait(700);
+      await eraseText(label, 30);
+      await typeText(label, 'انستقرام', 80);
+      localStorage.setItem(FIXED_KEY, '1');
+      card.removeEventListener('mouseenter', fix);
+    });
+  })();
 
   /* ---------- preload everything before revealing the page ---------- */
   function preloadVideo(url){
