@@ -77,6 +77,16 @@
     color:var(--gold-soft);
     text-align:center;
   }
+  .type-cursor{
+    display:inline-block;
+    color:var(--gold);
+    animation:blink 1s step-end infinite;
+    font-weight:300;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+  @media (prefers-reduced-motion: reduce){
+    .type-cursor{ animation:none; }
+  }
   .subtitle{
     color:var(--muted);
     font-size:.9rem;
@@ -148,7 +158,7 @@
 <div class="bg-overlay"></div>
 
 <div class="avatar" id="avatar"></div>
-<h1 class="display">بدر المطيري</h1>
+<h1 class="display"><span id="nameTypeText"></span><span class="type-cursor">|</span></h1>
 <p class="subtitle">ستريمر وصانع محتوى</p>
 
 <div class="links">
@@ -239,6 +249,47 @@
       tile.className = 'tile';
       tile.style.backgroundImage = `url('${order[i % order.length]}')`;
       collage.appendChild(tile);
+    }
+  })();
+
+  /* ---------- typewriter cycling name ---------- */
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function typeText(el, text, speed){
+    return new Promise(resolve=>{
+      if(reduceMotion){ el.textContent = text; resolve(); return; }
+      let i = 0;
+      (function tick(){
+        el.textContent = text.slice(0, i);
+        i++;
+        if(i <= text.length){ setTimeout(tick, speed); }
+        else resolve();
+      })();
+    });
+  }
+  function eraseText(el, speed){
+    return new Promise(resolve=>{
+      if(reduceMotion){ el.textContent=''; resolve(); return; }
+      let text = el.textContent;
+      (function tick(){
+        text = text.slice(0, -1);
+        el.textContent = text;
+        if(text.length > 0){ setTimeout(tick, speed); }
+        else resolve();
+      })();
+    });
+  }
+  function wait(ms){ return new Promise(r=>setTimeout(r, ms)); }
+
+  (async function(){
+    const el = document.getElementById('nameTypeText');
+    const names = ['بدر المطيري', 'سكوز', 'ابو كايف', 'ابو سكوز'];
+    let i = 0;
+    while(true){
+      await typeText(el, names[i % names.length], 95);
+      i++;
+      await wait(2400);
+      await eraseText(el, 28);
+      await wait(350);
     }
   })();
 </script>
