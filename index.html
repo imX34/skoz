@@ -876,9 +876,13 @@
     await pageReady;
     await wait(200);
     let last = null;
+    let firstRun = true;
     while(true){
       let item;
-      if(forcedRareQueue.length){
+      if(firstRun){
+        item = nameVariants[0];
+        firstRun = false;
+      } else if(forcedRareQueue.length){
         item = forcedRareQueue.shift();
       } else {
         item = pickWeighted(nameVariants);
