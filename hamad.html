@@ -30,15 +30,18 @@
   }
   .display{font-family:'Amiri', serif;}
 
-  .avatar{
-    width:104px; height:104px; border-radius:50%;
+  .photo-frame{
+    width:min(280px, 78vw);
+    aspect-ratio:4/5;
+    border-radius:22px;
     background:var(--bg-elev) center/cover no-repeat;
     border:2px solid var(--gold);
     box-shadow:0 0 0 8px rgba(201,161,95,.08);
-    margin-bottom:20px;
+    margin-bottom:22px;
     display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
   }
-  .avatar svg{ width:44px; height:44px; stroke:var(--gold-soft); }
+  .photo-frame svg{ width:56px; height:56px; stroke:var(--gold-soft); }
 
   h1{
     font-family:'Amiri', serif;
@@ -124,13 +127,13 @@
 </head>
 <body>
 
-<div class="avatar">
+<div class="photo-frame" id="photoFrame">
   <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 21v-1a7 7 0 0 1 7-7h2a7 7 0 0 1 7 7v1"/><circle cx="12" cy="7" r="4"/></svg>
 </div>
 <h1 class="display">حمد</h1>
 <span class="badge">مطور مواقع</span>
 <p class="subtitle">
-  الشخص الي طور هذا الموقع، ومن أوائل المتابعين لبدر.
+  واحد كويس مؤدب.
 </p>
 
 <div class="links">
@@ -153,6 +156,27 @@
     الرجوع للصفحة الرئيسية
   </a>
 </div>
+
+<script>
+  function checkImg(url){
+    return new Promise(res=>{
+      const img = new Image();
+      img.onload = ()=>res(true);
+      img.onerror = ()=>res(false);
+      img.src = url;
+    });
+  }
+  (async function(){
+    const frame = document.getElementById('photoFrame');
+    for(const src of ['images/hamad.png', 'images/hamad.jpg', 'images/hamad.jpeg']){
+      if(await checkImg(src)){
+        frame.style.backgroundImage = `url('${src}')`;
+        frame.innerHTML = '';
+        break;
+      }
+    }
+  })();
+</script>
 
 </body>
 </html>
