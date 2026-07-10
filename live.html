@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>أوفرلاي بث بدر</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --gold:#c9a15f;
+    --gold-soft:#e4c98a;
+    --cream:#f1e9d8;
+    --muted:#c9bda8;
+    --bar-bg:rgba(15,12,9,.72);
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html, body{
+    background:transparent;
+    width:100vw; height:100vh;
+    margin:0; padding:0;
+    overflow:hidden;
+    font-family:'Tajawal', sans-serif;
+  }
+
+  .bar{
+    position:fixed;
+    top:0; left:0; right:0;
+    width:100%;
+    box-sizing:border-box;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:0;
+    padding:14px 20px;
+    background:var(--bar-bg);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    border-bottom:3px solid var(--gold);
+    box-shadow:0 8px 30px rgba(0,0,0,.35);
+    transform:translateY(-100%);
+    animation:slideIn .8s .2s cubic-bezier(.22,1,.36,1) forwards;
+  }
+  @keyframes slideIn{ to{ transform:translateY(0); } }
+
+  .brand{
+    display:flex; align-items:center; gap:11px;
+    padding-left:18px; margin-left:18px;
+    border-left:1px solid rgba(201,161,95,.4);
+    flex-shrink:0;
+  }
+  .brand-logo{
+    width:38px; height:38px; border-radius:50%;
+    background:#211c17 center/cover no-repeat;
+    border:2px solid var(--gold);
+  }
+  .brand-name{
+    font-family:'Amiri', serif;
+    font-weight:700;
+    font-size:1.15rem;
+    color:var(--gold-soft);
+    white-space:nowrap;
+  }
+
+  .accounts{
+    display:flex;
+    align-items:center;
+    min-width:210px;
+  }
+  .account-slot{
+    display:flex; align-items:center; gap:11px;
+    white-space:nowrap;
+    opacity:0;
+    transform:translateY(6px);
+    transition:opacity .4s ease, transform .4s ease;
+  }
+  .account-slot.show{ opacity:1; transform:translateY(0); }
+  .account-slot .ic{
+    width:28px; height:28px;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .account-slot .ic svg{ width:24px; height:24px; stroke:var(--gold-soft); }
+  .account-slot .ic img{ width:24px; height:24px; border-radius:6px; object-fit:cover; }
+  .account-slot .txt{ display:flex; flex-direction:column; line-height:1.25; }
+  .account-slot .label{ font-size:.74rem; color:var(--muted); font-weight:500; }
+  .account-slot .handle{ font-size:.98rem; color:var(--cream); font-weight:700; }
+
+  .glow{
+    position:absolute; inset:0;
+    pointer-events:none;
+    background:linear-gradient(90deg, transparent 0%, rgba(201,161,95,.12) 50%, transparent 100%);
+    background-size:200% 100%;
+    animation:shimmer 6s linear infinite;
+  }
+  @keyframes shimmer{
+    0%{ background-position:200% 0; }
+    100%{ background-position:-200% 0; }
+  }
+
+  /* ---------- WEBCAM FRAME (top half of the screen) ---------- */
+  .cam-frame{
+    position:fixed;
+    top:0; left:0; right:0;
+    height:50vh;
+    box-sizing:border-box;
+    border:3px solid var(--gold);
+    border-bottom:none;
+    pointer-events:none;
+  }
+  .cam-frame::after{
+    content:'';
+    position:absolute; left:0; right:0; bottom:0;
+    border-top:3px dashed var(--gold);
+    opacity:.9;
+  }
+  .cam-corner{
+    position:absolute;
+    width:15px; height:15px;
+    background:var(--gold);
+    border:2px solid rgba(10,8,6,.85);
+    transform:rotate(45deg);
+  }
+  .cam-corner.tl{ top:-10px; left:-10px; }
+  .cam-corner.tr{ top:-10px; right:-10px; }
+  .cam-corner.bl{ bottom:-10px; left:-10px; }
+  .cam-corner.br{ bottom:-10px; right:-10px; }
+
+  @media (prefers-reduced-motion: reduce){
+    .bar{ animation:none; transform:translateY(0); }
+    .glow{ animation:none; opacity:0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cam-frame">
+  <span class="cam-corner tl"></span>
+  <span class="cam-corner tr"></span>
+  <span class="cam-corner bl"></span>
+  <span class="cam-corner br"></span>
+</div>
+
+<div class="bar">
+  <div class="glow"></div>
+
+  <div class="brand">
+    <div class="brand-logo" id="brandLogo"></div>
+    <span class="brand-name">بدر المطيري</span>
+  </div>
+
+  <div class="accounts">
+    <div class="account-slot" id="accountSlot">
+      <span class="ic" id="slotIcon"></span>
+      <span class="txt">
+        <span class="label" id="slotLabel"></span>
+        <span class="handle" id="slotHandle"></span>
+      </span>
+    </div>
+  </div>
+</div>
+
+<script>
+  function checkImg(url){
+    return new Promise(res=>{
+      const img = new Image();
+      img.onload = ()=>res(true);
+      img.onerror = ()=>res(false);
+      img.src = url;
+    });
+  }
+  checkImg('images/img3.png').then(ok=>{
+    if(ok) document.getElementById('brandLogo').style.backgroundImage = "url('images/img3.png')";
+  });
+
+  /* ---------- rotating accounts (no immediate repeat) ---------- */
+  const accounts = [
+    {
+      label:'تيك توك', handle:'@l21i9l',
+      icon:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M15 4v9.5a3.5 3.5 0 1 1-3-3.46"/><path d="M15 4c.7 2 2.3 3.3 4.3 3.5"/></svg>'
+    },
+    {
+      label:'انستقرام', handle:'@l21i9l',
+      icon:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="#e4c98a" stroke="none"/></svg>'
+    },
+    {
+      label:'سناب شات', handle:'@l21i9l',
+      icon:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 3c3 0 5 2.2 5 5.2 0 2.1.5 3.4 1.6 4.4.5.5.2 1.3-.5 1.4l-1.7.3c.2.7.7 1.3 1.6 1.7.6.3.5 1.2-.2 1.4-1 .3-2 .4-2.7.9-.6.4-1.3 1.7-2.6 1.9v0c-.3 0-.6 0-1-.1-.6-.1-1.3-.3-1.5-1-1.3-.2-2-1.5-2.6-1.9-.7-.5-1.7-.6-2.7-.9-.7-.2-.8-1.1-.2-1.4.9-.4 1.4-1 1.6-1.7l-1.7-.3c-.7-.1-1-.9-.5-1.4C6.5 11.6 7 10.3 7 8.2 7 5.2 9 3 12 3Z"/></svg>'
+    },
+    {
+      label:'دسكورد', handle:'انضم للسيرفر',
+      icon:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="3" y="7" width="18" height="12" rx="6"/><circle cx="9" cy="13" r="1.4" fill="#e4c98a" stroke="none"/><circle cx="15" cy="13" r="1.4" fill="#e4c98a" stroke="none"/><path d="M8 7l1.5-3h5L16 7"/></svg>'
+    },
+    {
+      label:'مقدام', handle:'القمة للخياطة',
+      img:'images/mqdam.png'
+    }
+  ];
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+    return a;
+  }
+
+  const slot = document.getElementById('accountSlot');
+  const slotIcon = document.getElementById('slotIcon');
+  const slotLabel = document.getElementById('slotLabel');
+  const slotHandle = document.getElementById('slotHandle');
+
+  async function renderAccount(acc){
+    if(acc.img){
+      const ok = await checkImg(acc.img);
+      slotIcon.innerHTML = ok
+        ? `<img src="${acc.img}" alt="${acc.label}">`
+        : '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="12" r="9"/></svg>';
+    } else {
+      slotIcon.innerHTML = acc.icon;
+    }
+    slotLabel.textContent = acc.label;
+    slotHandle.textContent = acc.handle;
+  }
+
+  (async function rotateAccounts(){
+    let queue = shuffle(accounts);
+    let qi = 0;
+    let last = null;
+
+    await renderAccount(queue[0]);
+    last = queue[0];
+    slot.classList.add('show');
+    qi = 1;
+
+    while(true){
+      await new Promise(r=>setTimeout(r, 4200));
+      slot.classList.remove('show');
+      await new Promise(r=>setTimeout(r, 420));
+
+      if(qi >= queue.length){ queue = shuffle(accounts); qi = 0; }
+      let next = queue[qi++];
+      if(next === last && queue.length > 1){
+        next = queue[qi] || queue[0];
+        qi++;
+      }
+      last = next;
+
+      await renderAccount(next);
+      slot.classList.add('show');
+    }
+  })();
+</script>
+
+</body>
+</html>
