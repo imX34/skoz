@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>شارك صورتك - بدر المطيري</title>
+<link rel="icon" href="images/img3.png" onerror="this.href='data:,'">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#171310;
+    --bg-elev:#211c17;
+    --bg-elev-2:#2a231c;
+    --gold:#c9a15f;
+    --gold-soft:#e4c98a;
+    --cream:#f1e9d8;
+    --muted:#9c8f79;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--cream);
+    font-family:'Tajawal', sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:56px 20px 40px;
+  }
+  .display{font-family:'Amiri', serif;}
+
+  .avatar{
+    width:96px; height:96px; border-radius:50%;
+    background:var(--bg-elev) center/cover no-repeat;
+    border:2px solid var(--gold);
+    box-shadow:0 0 0 8px rgba(201,161,95,.08);
+    margin-bottom:18px;
+  }
+  .avatar.noimg{ background:var(--bg-elev); }
+
+  h1{
+    font-family:'Amiri', serif;
+    font-size:clamp(1.5rem, 6vw, 2rem);
+    color:var(--gold-soft);
+    text-align:center;
+  }
+  .subtitle{
+    color:var(--muted);
+    font-size:.92rem;
+    margin-top:8px;
+    margin-bottom:32px;
+    text-align:center;
+    max-width:420px;
+    line-height:1.7;
+  }
+
+  form{
+    width:100%;
+    max-width:420px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .field-label{
+    font-size:.85rem;
+    color:var(--muted);
+    margin-bottom:6px;
+    display:block;
+  }
+  input[type="text"], textarea{
+    width:100%;
+    padding:14px 16px;
+    border-radius:12px;
+    background:var(--bg-elev);
+    border:1px solid rgba(201,161,95,.22);
+    color:var(--cream);
+    font-family:'Tajawal', sans-serif;
+    font-size:.95rem;
+    resize:none;
+    transition:border-color .3s ease;
+  }
+  input[type="text"]:focus, textarea:focus{
+    outline:none;
+    border-color:var(--gold);
+  }
+
+  .file-drop{
+    position:relative;
+    border:2px dashed rgba(201,161,95,.35);
+    border-radius:14px;
+    background:var(--bg-elev);
+    padding:26px 16px;
+    text-align:center;
+    cursor:pointer;
+    transition:border-color .3s ease, background .3s ease;
+  }
+  .file-drop:hover, .file-drop.dragover{
+    border-color:var(--gold);
+    background:var(--bg-elev-2);
+  }
+  .file-drop svg{ width:30px; height:30px; stroke:var(--gold-soft); margin-bottom:8px; }
+  .file-drop p{ font-size:.9rem; color:var(--cream); font-weight:500; }
+  .file-drop span{ font-size:.78rem; color:var(--muted); display:block; margin-top:4px; }
+  .file-drop input[type="file"]{
+    position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%;
+  }
+  .preview-wrap{ margin-top:14px; display:none; }
+  .preview-wrap.show{ display:block; }
+  .preview-wrap img{
+    width:100%; max-height:260px; object-fit:cover;
+    border-radius:12px; border:1px solid rgba(201,161,95,.3);
+  }
+
+  .honeypot{ position:absolute; left:-9999px; opacity:0; }
+
+  button[type="submit"]{
+    margin-top:6px;
+    padding:15px 20px;
+    border-radius:999px;
+    border:none;
+    background:var(--gold);
+    color:#211c17;
+    font-family:'Tajawal', sans-serif;
+    font-weight:900;
+    font-size:.98rem;
+    cursor:pointer;
+    transition:transform .3s ease, background .3s ease, opacity .3s ease;
+  }
+  button[type="submit"]:hover{ transform:translateY(-3px); background:var(--gold-soft); }
+  button[type="submit"]:disabled{ opacity:.5; cursor:not-allowed; transform:none; }
+
+  .status-msg{
+    margin-top:16px;
+    padding:14px 16px;
+    border-radius:12px;
+    font-size:.9rem;
+    text-align:center;
+    display:none;
+    line-height:1.6;
+  }
+  .status-msg.show{ display:block; }
+  .status-msg.ok{ background:rgba(120,180,120,.12); border:1px solid rgba(120,180,120,.4); color:#bfe6bf; }
+  .status-msg.err{ background:rgba(200,90,90,.12); border:1px solid rgba(200,90,90,.4); color:#f0bcbc; }
+
+  .form-wrap.hidden{ display:none; }
+
+  .links-nav{
+    width:100%;
+    max-width:420px;
+    margin-top:30px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .back-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    width:100%;
+    padding:14px 20px;
+    border-radius:999px;
+    text-decoration:none;
+    font-weight:700;
+    font-size:.92rem;
+    color:var(--gold-soft);
+    background:transparent;
+    border:1px solid var(--gold);
+    transition:transform .3s ease, background .3s ease;
+  }
+  .back-btn:hover{
+    transform:translateY(-3px);
+    background:rgba(201,161,95,.08);
+  }
+  .back-btn svg{ width:16px; height:16px; }
+</style>
+</head>
+<body>
+
+<div class="avatar" id="avatar"></div>
+<h1 class="display">شارك صورتك مع بدر</h1>
+<p class="subtitle">
+  ارفع صورتك وبنراجعها، واللي تنعرض بيكون بمعرض صور المتابعين.
+  تأكد إن الصورة مناسبة قبل ما ترسلها.
+</p>
+
+<div class="form-wrap" id="formWrap">
+  <form name="fan-photos" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" enctype="multipart/form-data" id="uploadForm">
+    <input type="hidden" name="form-name" value="fan-photos">
+    <p class="honeypot">
+      <label>اتركه فارغ: <input name="bot-field"></label>
+    </p>
+
+    <div>
+      <label class="field-label" for="username">اسمك أو حسابك (اختياري)</label>
+      <input type="text" id="username" name="username" placeholder="مثال: @l21i9l">
+    </div>
+
+    <div>
+      <label class="field-label">الصورة</label>
+      <label class="file-drop" id="fileDrop">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+        <p>اضغط لاختيار صورة</p>
+        <span>PNG أو JPG، لحد 8MB</span>
+        <input type="file" id="photoInput" name="photo" accept="image/*" required>
+      </label>
+      <div class="preview-wrap" id="previewWrap">
+        <img id="previewImg" alt="معاينة الصورة">
+      </div>
+    </div>
+
+    <div>
+      <label class="field-label" for="note">ملاحظة (اختياري)</label>
+      <textarea id="note" name="note" rows="3" placeholder="أي كلام تحب تضيفه..."></textarea>
+    </div>
+
+    <button type="submit" id="submitBtn">إرسال الصورة</button>
+  </form>
+
+  <div class="status-msg" id="statusMsg"></div>
+</div>
+
+<div class="links-nav">
+  <a class="back-btn" href="links.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    الرجوع للروابط
+  </a>
+</div>
+
+<script>
+  function checkImg(url){
+    return new Promise(res=>{
+      const img = new Image();
+      img.onload = ()=>res(true);
+      img.onerror = ()=>res(false);
+      img.src = url;
+    });
+  }
+  checkImg('images/img3.png').then(ok=>{
+    const av = document.getElementById('avatar');
+    if(ok){ av.style.backgroundImage = "url('images/img3.png')"; }
+    else{ av.classList.add('noimg'); }
+  });
+
+  const fileDrop = document.getElementById('fileDrop');
+  const photoInput = document.getElementById('photoInput');
+  const previewWrap = document.getElementById('previewWrap');
+  const previewImg = document.getElementById('previewImg');
+  const dropText = fileDrop.querySelector('p');
+
+  photoInput.addEventListener('change', ()=>{
+    const file = photoInput.files[0];
+    if(!file){ previewWrap.classList.remove('show'); return; }
+    dropText.textContent = file.name;
+    const reader = new FileReader();
+    reader.onload = e=>{
+      previewImg.src = e.target.result;
+      previewWrap.classList.add('show');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  ['dragover','dragleave','drop'].forEach(evt=>{
+    fileDrop.addEventListener(evt, e=>{
+      e.preventDefault();
+      fileDrop.classList.toggle('dragover', evt==='dragover');
+    });
+  });
+
+  const form = document.getElementById('uploadForm');
+  const formWrap = document.getElementById('formWrap');
+  const submitBtn = document.getElementById('submitBtn');
+  const statusMsg = document.getElementById('statusMsg');
+
+  function showStatus(kind, text){
+    statusMsg.textContent = text;
+    statusMsg.className = 'status-msg show ' + kind;
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const file = photoInput.files[0];
+    if(file && file.size > 8 * 1024 * 1024){
+      showStatus('err', 'حجم الصورة أكبر من 8MB، اختر صورة أصغر.');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'جاري الإرسال...';
+
+    const data = new FormData(form);
+
+    fetch('/upload.html', {
+      method: 'POST',
+      body: data
+    })
+    .then(res=>{
+      if(res.ok){
+        form.style.display = 'none';
+        showStatus('ok', 'وصلت صورتك! تنعرض بمعرض صور المتابعين بعد المراجعة. شكراً لك 🤍');
+      } else {
+        throw new Error('bad response');
+      }
+    })
+    .catch(()=>{
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'إرسال الصورة';
+      showStatus('err', 'صار خطأ أثناء الإرسال، حاول مرة ثانية.');
+    });
+  });
+</script>
+
+</body>
+</html>
