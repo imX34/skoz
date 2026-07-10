@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حمد - مطور الموقع</title>
+<link rel="icon" href="images/img3.png" onerror="this.href='data:,'">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#171310;
+    --bg-elev:#211c17;
+    --bg-elev-2:#2a231c;
+    --gold:#c9a15f;
+    --gold-soft:#e4c98a;
+    --cream:#f1e9d8;
+    --muted:#9c8f79;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--cream);
+    font-family:'Tajawal', sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:56px 20px 40px;
+  }
+  .display{font-family:'Amiri', serif;}
+
+  .avatar{
+    width:104px; height:104px; border-radius:50%;
+    background:var(--bg-elev) center/cover no-repeat;
+    border:2px solid var(--gold);
+    box-shadow:0 0 0 8px rgba(201,161,95,.08);
+    margin-bottom:20px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .avatar svg{ width:44px; height:44px; stroke:var(--gold-soft); }
+
+  h1{
+    font-family:'Amiri', serif;
+    font-size:clamp(1.6rem, 6vw, 2.1rem);
+    color:var(--gold-soft);
+    text-align:center;
+  }
+  .badge{
+    display:inline-block;
+    margin-top:10px;
+    padding:5px 14px;
+    border-radius:999px;
+    border:1px solid rgba(201,161,95,.35);
+    color:var(--muted);
+    font-size:.75rem;
+    font-weight:500;
+  }
+  .subtitle{
+    color:var(--muted);
+    font-size:.9rem;
+    margin-top:16px;
+    margin-bottom:34px;
+    text-align:center;
+    max-width:380px;
+    line-height:1.8;
+  }
+
+  .links{
+    width:100%;
+    max-width:420px;
+    display:flex;
+    flex-direction:column;
+    gap:13px;
+  }
+  .link-btn{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:15px 20px;
+    border-radius:14px;
+    background:var(--bg-elev);
+    border:1px solid rgba(201,161,95,.22);
+    text-decoration:none;
+    color:var(--cream);
+    font-weight:500;
+    font-size:.98rem;
+    transition:transform .3s ease, border-color .3s ease, background .3s ease;
+  }
+  .link-btn:hover{
+    transform:translateY(-3px);
+    border-color:var(--gold);
+    background:var(--bg-elev-2);
+  }
+  .link-btn svg{ width:22px; height:22px; stroke:var(--gold-soft); flex-shrink:0; }
+
+  .back-wrap{
+    width:100%;
+    max-width:420px;
+    margin-top:30px;
+  }
+  .back-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    width:100%;
+    padding:14px 20px;
+    border-radius:999px;
+    text-decoration:none;
+    font-weight:700;
+    font-size:.92rem;
+    color:var(--gold-soft);
+    background:transparent;
+    border:1px solid var(--gold);
+    transition:transform .3s ease, background .3s ease;
+  }
+  .back-btn:hover{
+    transform:translateY(-3px);
+    background:rgba(201,161,95,.08);
+  }
+  .back-btn svg{ width:16px; height:16px; }
+</style>
+</head>
+<body>
+
+<div class="avatar">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 21v-1a7 7 0 0 1 7-7h2a7 7 0 0 1 7 7v1"/><circle cx="12" cy="7" r="4"/></svg>
+</div>
+<h1 class="display">حمد</h1>
+<span class="badge">مطور مواقع</span>
+<p class="subtitle">
+  الشخص الي طور هذا الموقع، ومن أوائل المتابعين لبدر.
+</p>
+
+<div class="links">
+
+  <a class="link-btn" href="https://www.instagram.com/ixx34x/" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="#e4c98a" stroke="none"/></svg>
+    <span>انستقرام</span>
+  </a>
+
+  <a class="link-btn" href="https://www.tiktok.com/@ix34xx" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M15 4v9.5a3.5 3.5 0 1 1-3-3.46"/><path d="M15 4c.7 2 2.3 3.3 4.3 3.5"/></svg>
+    <span>تيك توك</span>
+  </a>
+
+</div>
+
+<div class="back-wrap">
+  <a class="back-btn" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    الرجوع للصفحة الرئيسية
+  </a>
+</div>
+
+</body>
+</html>
