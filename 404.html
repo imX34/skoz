@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الصفحة غير موجودة - بدر المطيري</title>
+<link rel="icon" href="images/img3.png" onerror="this.href='data:,'">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#171310;
+    --bg-elev:#211c17;
+    --gold:#c9a15f;
+    --gold-soft:#e4c98a;
+    --cream:#f1e9d8;
+    --muted:#9c8f79;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--cream);
+    font-family:'Tajawal', sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:40px 20px;
+    text-align:center;
+  }
+  .display{font-family:'Amiri', serif;}
+
+  .avatar{
+    width:96px; height:96px; border-radius:50%;
+    background:var(--bg-elev) center/cover no-repeat;
+    border:2px solid var(--gold);
+    box-shadow:0 0 0 8px rgba(201,161,95,.08);
+    margin-bottom:22px;
+  }
+  .avatar.noimg{ background:var(--bg-elev); }
+
+  .code{
+    font-family:'Amiri', serif;
+    font-weight:700;
+    font-size:clamp(3.4rem, 16vw, 5.5rem);
+    color:var(--gold);
+    line-height:1;
+    letter-spacing:2px;
+  }
+  h1{
+    font-family:'Amiri', serif;
+    font-size:clamp(1.4rem, 5.5vw, 1.9rem);
+    color:var(--gold-soft);
+    margin-top:14px;
+  }
+  .subtitle{
+    color:var(--muted);
+    font-size:.92rem;
+    margin-top:10px;
+    margin-bottom:36px;
+    max-width:380px;
+    line-height:1.7;
+  }
+
+  .actions{
+    width:100%;
+    max-width:340px;
+    display:flex;
+    flex-direction:column;
+    gap:13px;
+  }
+  .btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    width:100%;
+    padding:14px 20px;
+    border-radius:999px;
+    text-decoration:none;
+    font-weight:700;
+    font-size:.92rem;
+    transition:transform .3s ease, background .3s ease, border-color .3s ease;
+  }
+  .btn-solid{
+    background:var(--gold);
+    color:#211c17;
+    font-weight:900;
+    border:none;
+  }
+  .btn-solid:hover{ transform:translateY(-3px); background:var(--gold-soft); }
+  .btn-outline{
+    color:var(--gold-soft);
+    background:transparent;
+    border:1px solid var(--gold);
+  }
+  .btn-outline:hover{ transform:translateY(-3px); background:rgba(201,161,95,.08); }
+  .btn svg{ width:16px; height:16px; }
+</style>
+</head>
+<body>
+
+<div class="avatar" id="avatar"></div>
+<div class="code display">404</div>
+<h1 class="display">الصفحة مو موجودة</h1>
+<p class="subtitle">يمكن الرابط غلط أو الصفحة انحذفت. جرب ترجع للرئيسية أو صفحة الروابط.</p>
+
+<div class="actions">
+  <a class="btn btn-solid" href="/">الصفحة الرئيسية</a>
+  <a class="btn btn-outline" href="/links.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    كل الروابط
+  </a>
+</div>
+
+<script>
+  function checkImg(url){
+    return new Promise(res=>{
+      const img = new Image();
+      img.onload = ()=>res(true);
+      img.onerror = ()=>res(false);
+      img.src = url;
+    });
+  }
+  checkImg('images/img3.png').then(ok=>{
+    const av = document.getElementById('avatar');
+    if(ok){ av.style.backgroundImage = "url('images/img3.png')"; }
+    else{ av.classList.add('noimg'); }
+  });
+</script>
+
+</body>
+</html>
