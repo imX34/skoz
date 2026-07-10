@@ -36,7 +36,7 @@
     position:fixed;
     top:50%; left:50%;
     width:250vw; height:250vh;
-    transform:translate(-50%,-50%) rotate(40deg);
+    transform:translate(-50%,-50%) rotate(-20deg);
     display:grid;
     grid-template-columns:repeat(auto-fill, 220px);
     grid-auto-rows:220px;
@@ -44,9 +44,18 @@
     filter:blur(12px) brightness(.4) saturate(1.05);
     z-index:-3;
     pointer-events:none;
+    animation:collageDrift 40s ease-in-out infinite;
+  }
+  @keyframes collageDrift{
+    0%{ transform:translate(-50%,-50%) rotate(-20deg) translate(0,0); }
+    50%{ transform:translate(-50%,-50%) rotate(-20deg) translate(-4%, 3%); }
+    100%{ transform:translate(-50%,-50%) rotate(-20deg) translate(0,0); }
   }
   .bg-collage.noimg{ display:none; }
   .bg-collage .tile{ background-size:cover; background-position:center; }
+  @media (prefers-reduced-motion: reduce){
+    .bg-collage{ animation:none; }
+  }
   .bg-overlay{
     position:fixed; inset:0; z-index:-2;
     background:rgba(23,19,16,.6);
@@ -211,7 +220,7 @@
   }
 
   (async function buildCollage(){
-    const candidates = ['images/img1.png','images/img2.png','images/img3.png','images/img4.png','images/img5.png','images/img6.png','images/img7.png','images/img8.png','images/img9.png','images/img10.png'];
+    const candidates = Array.from({length:20}, (_,i)=>`images/img${i+1}.png`);
     const checks = await Promise.all(candidates.map(src=>checkImg(src).then(ok=>ok?src:null)));
     const available = checks.filter(Boolean);
     const collage = document.getElementById('bgCollage');
